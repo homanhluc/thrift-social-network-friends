@@ -20,7 +20,7 @@ service SocialNetworkFriendsService {
     list<User> getAllUsers(),
     User getUserById(1:string id),
     bool registerUser(1:string un),
-    bool loginUser(1:string un)
+    User loginUser(1:string un)
 }
 
 

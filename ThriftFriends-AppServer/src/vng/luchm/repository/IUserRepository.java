@@ -14,7 +14,7 @@ import vng.luchm.thrift.User;
  */
 public interface IUserRepository {
     boolean registerUser(String un);
-    boolean loginUser(String un);
+    User loginUser(String un);
     User getUserById(String id);
     List<User> getAllUsers();
     void logQuery(String query);

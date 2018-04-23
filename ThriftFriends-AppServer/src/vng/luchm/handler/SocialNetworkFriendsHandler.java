@@ -50,7 +50,7 @@ public class SocialNetworkFriendsHandler implements SocialNetworkFriendsService.
     }
 
     @Override
-    public boolean loginUser(String un) throws TException {
+    public User loginUser(String un) throws TException {
         return ur.loginUser(un);
     }
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Social network friends</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="dist/css/style.css">
+    <script src="dist/js/jquery-1.12.0.min.js"></script>
+    <script src="dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="service/getFriend.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1" id="logout">
+                <div class="page-header">
+                    <h3 class="reviews">Hi! Ho Manh Luc</h3>
+                    <div class="logout">
+                        <button class="btn btn-default btn-circle text-uppercase" type="button" onclick="$('#logout').hide(); $('#login').show()">
+                            <span class="glyphicon glyphicon-off"></span> Logout
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-tabs">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active">
+                            <a href="#comments-logout" role="tab" data-toggle="tab">
+                                <h4 class="reviews text-capitalize">Friends List</h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#add-comment" role="tab" data-toggle="tab">
+                                <h4 class="reviews text-capitalize">Friend request</h4>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#account-settings" role="tab" data-toggle="tab">
+                                <h4 class="reviews text-capitalize">Friends search</h4>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="comments-logout">
+                            <ul class="media-list" id="friend-component">
+                                
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="add-comment">
+                            <!-- Friend-request -->
+                            <ul class="media-list">
+                                <li class="media">
+                                    <a class="pull-left" href="#">
+                                        <img class="media-object img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/kurafire/128.jpg" alt="profile">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="well well-lg">
+                                            <h4 class="media-heading text-uppercase reviews">Nico</h4>
+                                            <ul class="media-date text-uppercase reviews list-inline">
+                                                <li class="dd">22</li>
+                                                <li class="mm">09</li>
+                                                <li class="aaaa">2014</li>
+                                            </ul>
+                                            <p class="media-comment">
+                                                I'm looking for that. Thanks!
+                                            </p>
+                                            <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply">
+                                                <span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <!-- Friend-request-end -->
+                        </div>
+                        <div class="tab-pane" id="account-settings">
+                            <!-- Search-input -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-4 col-sm-offset-5">
+                                        <div id="imaginary_container">
+                                            <div class="input-group stylish-input-group input-append">
+                                                <input type="text" class="form-control" placeholder="Search">
+                                                <span class="input-group-addon">
+                                                    <button type="submit">
+                                                        <span class="glyphicon glyphicon-search"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Search-input-end -->
+
+                            <!-- Friend-search -->
+
+                            <!-- Friend-search-end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="page-header text-center">
+        <h3 class="reviews">
+            <span class="glyphicon glyphicon-magnet"></span> Luc Manh Ho
+        </h3>
+    </div>
+    </div>
+
+</body>
+
+</html>

@@ -10,12 +10,12 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.util.ArrayList;
-import static java.util.Collections.list;
 import java.util.List;
 import vng.luchm.thrift.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
+import vng.luchm.pool.mongo.ConnectionPool;
 import vng.luchm.thrift.FriendLists;
 //public class UserRepositoryMongoImp implements IUserRepository {
 //
@@ -46,35 +46,69 @@ import vng.luchm.thrift.FriendLists;
 
 public class UserRepositoryImp implements IUserRepository {
 
-    private static final MongoClient mongoClient
-            = new MongoClient("localhost", 27017);
-    private static final MongoDatabase db
-            = mongoClient.getDatabase("socialnetworkfriends");
-    private static final MongoCollection<Document> coll
-            = db.getCollection("user");
-
+//    private static final MongoClient mongoClient
+//            = new MongoClient("localhost", 27017);
+//    private static final MongoDatabase db
+//            = mongoClient.getDatabase("socialnetworkfriends");
+//    private static final MongoCollection<Document> coll
+//            = db.getCollection("user");
     @Override
     public boolean registerUser(String un) {
-        User user = new User();
-        user.setUserName(un);
+        if (checkUserExist(un)) {
+            User user = new User();
+            user.setUserName(un);
 
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        Document doc = gson.fromJson(json, Document.class);
-
-        coll.insertOne(doc);
-        return true;
-    }
-
-    @Override
-    public boolean loginUser(String un) {
-        Document query = new Document();
-        query.put("UserName", un);
-        FindIterable<Document> iterable = coll.find(query);
-        if (iterable.first() != null) {
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+            Document doc = gson.fromJson(json, Document.class);
+            MongoCollection<Document> coll = ConnectionPool.getConnection();
+            coll.insertOne(doc);
             return true;
         }
         return false;
+
+    }
+
+    private boolean checkUserExist(String name) {
+        Document query = new Document();
+        query.put("UserName", name);
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
+        FindIterable<Document> iterable = coll.find(query);
+        if (iterable.first() == null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public User loginUser(String un) {
+        User u = new User();
+        Document query = new Document();
+        query.put("UserName", un);
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
+        FindIterable<Document> iterable = coll.find(query);
+        List<FriendLists> l = new ArrayList<>();
+        if (iterable.first() != null) {
+            u.setId(iterable.first().getObjectId("_id").toString());
+            u.setUserName(iterable.first().getString("UserName"));
+            List<FriendLists> fl = new ArrayList<>();
+            List<Document> list = (List<Document>) iterable.first().get("Friends");
+            if (list != null) {
+                for (Document bo : list) {
+                    FriendLists f = new FriendLists();
+                    f.setUserId(bo.getString("UserId"));
+                    f.setStatus(bo.getInteger("Status"));
+                    f.setActionUser(bo.getString("ActionUser"));
+                    fl.add(f);
+                }
+            }
+            u.setFriends(fl);
+            l.clear();
+            return u;
+        }
+
+        return null;
     }
 
     @Override
@@ -82,6 +116,7 @@ public class UserRepositoryImp implements IUserRepository {
         User u = new User();
         Document query = new Document();
         query.put("_id", new ObjectId(id));
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         FindIterable<Document> iterable = coll.find(query);
         List<FriendLists> l = new ArrayList<>();
         if (iterable.first() != null) {
@@ -109,6 +144,7 @@ public class UserRepositoryImp implements IUserRepository {
     @Override
     public List<User> getAllUsers() {
         List<User> lu = new ArrayList<>();
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         FindIterable<Document> iterable = coll.find();
         for (Document document : iterable) {
             User u = new User();
@@ -153,9 +189,9 @@ public class UserRepositoryImp implements IUserRepository {
 
         Bson newValue = new Document("Friends", doc);
         Bson update = new Document("$addToSet", newValue);
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         coll.updateOne(filter, update);
     }
-
     @Override
     public boolean unFriend(String id_user_one, String id_user_two) {
         try {
@@ -173,6 +209,7 @@ public class UserRepositoryImp implements IUserRepository {
         Bson filter = new Document("_id", new ObjectId(id_user_one));
         Bson newValue = new Document("Friends", new Document("UserId", id_user_two));
         Bson update = new Document("$pull", newValue);
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         coll.updateOne(filter, update);
     }
 
@@ -198,7 +235,7 @@ public class UserRepositoryImp implements IUserRepository {
 
         BasicDBObject command = new BasicDBObject();
         command.put("$set", data);
-
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         coll.updateOne(query, command);
     }
 
@@ -224,7 +261,7 @@ public class UserRepositoryImp implements IUserRepository {
 
         BasicDBObject command = new BasicDBObject();
         command.put("$set", data);
-
+        MongoCollection<Document> coll = ConnectionPool.getConnection();
         coll.updateOne(query, command);
     }
 

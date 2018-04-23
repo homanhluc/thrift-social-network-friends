@@ -8,12 +8,18 @@ package vng.luchm.config;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import vng.luchm.controller.GetAllUsers;
+import vng.luchm.controller.GetFriendsList;
 import vng.luchm.controller.GetUserById;
 import vng.luchm.controller.Login;
+import vng.luchm.controller.Logout;
 import vng.luchm.controller.Register;
+import vng.luchm.controller.RequestAction;
 
 /**
  *
@@ -44,11 +50,24 @@ public class JettyServer {
         servletHandler.addServletWithMapping(Login.class, "/login");
         servletHandler.addServletWithMapping(GetAllUsers.class, "/all");
         servletHandler.addServletWithMapping(GetUserById.class, "/user");
-
-        servletHandler.addServletWithMapping(GetUserById.class, "/ra");
-
+        servletHandler.addServletWithMapping(RequestAction.class, "/ra");
+        servletHandler.addServletWithMapping(GetFriendsList.class, "/friends");
+        servletHandler.addServletWithMapping(Logout.class, "/logout");
+        
+        
+        setSessionEnableContext(server, servletHandler);
         server.start();
 
+    }
+
+    private static void setSessionEnableContext(Server server, ServletHandler handlerServlet) {
+        // Specify the Session ID Manager        
+        HashSessionIdManager idmanager = new HashSessionIdManager();
+        server.setSessionIdManager(idmanager);
+        // Specify the session handler
+        SessionHandler sessionsHandler = new SessionHandler();
+        handlerServlet.setHandler(sessionsHandler);
+        
     }
 
     public static void stop() throws Exception {

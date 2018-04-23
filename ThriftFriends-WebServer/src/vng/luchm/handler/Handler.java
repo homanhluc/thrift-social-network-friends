@@ -28,7 +28,7 @@ public class Handler implements Serializable {
         return ThriftClient.client.getUserById(id);
     }
 
-    public synchronized static boolean login(String userName) throws TException {
+    public synchronized static User login(String userName) throws TException {
         return ThriftClient.client.loginUser(userName);
     }
 

@@ -7,13 +7,11 @@ package vng.luchm.config;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
-import vng.luchm.thrift.ActionUser;
 import vng.luchm.thrift.SocialNetworkFriendsService;
 
 /**
@@ -32,12 +30,6 @@ public class ThriftClient {
             protocol = new TBinaryProtocol(transport);
             client = new SocialNetworkFriendsService.Client(protocol);
             transport.open();
-            
-            try {
-                System.out.println(client.getUserById("5ac6e9ce35953417ba93998c"));
-            } catch (TException ex) {
-                Logger.getLogger(ThriftClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
         } catch (TTransportException ex) {
             Logger.getLogger(ThriftClient.class.getName()).log(Level.SEVERE, null, ex);
         }

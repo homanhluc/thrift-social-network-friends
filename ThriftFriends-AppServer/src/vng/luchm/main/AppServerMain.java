@@ -11,6 +11,8 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
 import vng.luchm.handler.SocialNetworkFriendsHandler;
+import vng.luchm.pool.mongo.Configuration;
+import vng.luchm.pool.mongo.ConnectionPool;
 import vng.luchm.thrift.SocialNetworkFriendsService;
 
 /**
@@ -33,7 +35,7 @@ public class AppServerMain {
             serverStart(processor);
         };
         new Thread(threadServerStart).start();
-
+        new ConnectionPool();
     }
 
     public static void serverStart(SocialNetworkFriendsService.Processor processor) {

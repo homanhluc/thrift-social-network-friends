@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.thrift.TException;
 import vng.luchm.handler.Handler;
 
@@ -23,11 +24,23 @@ public class GetAllUsers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
-            resp.getWriter().write(new Gson().toJson(Handler.getAllUser()));
+            contentType(resp);
+            HttpSession session = req.getSession();
+            if (session.getAttribute("user_session") != null) {
+                resp.getWriter().write(new Gson().toJson(Handler.getAllUser()));
+            } else {
+                resp.getWriter().write(new Gson().toJson(false));
+            }
+            
         } catch (TException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static void contentType(HttpServletResponse resp) {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:9001");
+        resp.setHeader("Access-Control-Allow-Methods", "GET");
     }
 }
